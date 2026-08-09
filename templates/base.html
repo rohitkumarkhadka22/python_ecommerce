@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>
+        {% block title %}
+            MyStore
+        {% endblock %}
+    </title>
+
+    <!-- Tailwind CSS -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body class="bg-white text-gray-900">
+
+
+<!-- ==================== NAVBAR ==================== -->
+
+<nav class="border-b border-gray-200 bg-white">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="flex items-center justify-between h-16">
+
+            <!-- Logo -->
+
+            <a
+                href="/"
+                class="text-xl font-bold text-gray-900"
+            >
+                MyStore
+            </a>
+
+
+            <!-- Navigation -->
+
+            <div class="flex items-center gap-8 text-sm font-medium">
+
+                <a
+                    href="/"
+                    class="text-gray-700 hover:text-blue-600 transition"
+                >
+                    Home
+                </a>
+
+
+                <a
+                    href="/#products"
+                    class="text-gray-700 hover:text-blue-600 transition"
+                >
+                    Products
+                </a>
+
+
+                <a
+                    href="/#categories"
+                    class="text-gray-700 hover:text-blue-600 transition"
+                >
+                    Categories
+                </a>
+
+
+                <!-- Authentication -->
+
+                {% if user.is_authenticated %}
+
+                    <span class="text-gray-600">
+                        Hi, {{ user.username }}
+                    </span>
+
+
+                    <!-- My Orders -->
+
+                    <a
+                        href="{% url 'order_history' %}"
+                        class="text-gray-700 hover:text-blue-600 transition"
+                    >
+                        My Orders
+                    </a>
+
+
+                    <!-- Logout -->
+
+                    <a
+                        href="{% url 'logout' %}"
+                        class="text-gray-700 hover:text-red-600 transition"
+                    >
+                        Logout
+                    </a>
+
+                {% else %}
+
+                    <!-- Login -->
+
+                    <a
+                        href="{% url 'login' %}"
+                        class="text-gray-700 hover:text-blue-600 transition"
+                    >
+                        Login
+                    </a>
+
+
+                    <!-- Register -->
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="text-gray-700 hover:text-blue-600 transition"
+                    >
+                        Register
+                    </a>
+
+                {% endif %}
+
+
+                <!-- Cart -->
+
+                <a
+                    href="{% url 'cart' %}"
+                    class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ==================== MAIN CONTENT ==================== -->
+
+{% block content %}
+{% endblock %}
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="bg-gray-950 text-gray-300">
+
+    <!-- Main Footer -->
+
+    <div class="max-w-7xl mx-auto px-6 py-14">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+
+            <!-- Brand -->
+
+            <div>
+
+                <div class="flex items-center gap-2 mb-4">
+
+                    <div
+                        class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center"
+                    >
+
+                        <i
+                            data-lucide="shopping-bag"
+                            class="w-5 h-5 text-white"
+                        ></i>
+
+                    </div>
+
+                    <h2 class="text-xl font-bold text-white">
+                        MyStore
+                    </h2>
+
+                </div>
+
+
+                <p class="text-sm text-gray-400 leading-6 max-w-sm">
+
+                    Everything you need, in one place.
+                    Shop quality products at great prices
+                    with a simple and reliable shopping experience.
+
+                </p>
+
+
+                <!-- Social Links -->
+
+                <div class="flex items-center gap-3 mt-6">
+
+
+                    <!-- Facebook -->
+
+                    <a
+                        href="https://www.facebook.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                        class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-300 font-bold text-lg hover:bg-blue-600 hover:border-blue-600 hover:text-white transition"
+                    >
+                        f
+                    </a>
+
+
+                    <!-- Instagram -->
+
+                    <a
+                        href="https://www.instagram.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                        class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-300 font-bold text-lg hover:bg-pink-600 hover:border-pink-600 hover:text-white transition"
+                    >
+                        ◎
+                    </a>
+
+
+                    <!-- X -->
+
+                    <a
+                        href="https://x.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="X"
+                        class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-300 font-bold text-lg hover:bg-gray-700 hover:border-gray-700 hover:text-white transition"
+                    >
+                        𝕏
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Links -->
+
+            <div>
+
+                <h3
+                    class="text-sm font-semibold text-white uppercase tracking-wider mb-5"
+                >
+                    Quick Links
+                </h3>
+
+
+                <ul class="space-y-3 text-sm">
+
+                    <li>
+                        <a
+                            href="/"
+                            class="hover:text-blue-400 transition"
+                        >
+                            Home
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a
+                            href="/#products"
+                            class="hover:text-blue-400 transition"
+                        >
+                            Products
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a
+                            href="/#categories"
+                            class="hover:text-blue-400 transition"
+                        >
+                            Categories
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a
+                            href="{% url 'cart' %}"
+                            class="hover:text-blue-400 transition"
+                        >
+                            Shopping Cart
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Account -->
+
+            <div>
+
+                <h3
+                    class="text-sm font-semibold text-white uppercase tracking-wider mb-5"
+                >
+                    My Account
+                </h3>
+
+
+                <ul class="space-y-3 text-sm">
+
+                    {% if user.is_authenticated %}
+
+                        <li>
+                            <a
+                                href="{% url 'order_history' %}"
+                                class="hover:text-blue-400 transition"
+                            >
+                                My Orders
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <a
+                                href="{% url 'logout' %}"
+                                class="hover:text-blue-400 transition"
+                            >
+                                Logout
+                            </a>
+                        </li>
+
+                    {% else %}
+
+                        <li>
+                            <a
+                                href="{% url 'login' %}"
+                                class="hover:text-blue-400 transition"
+                            >
+                                Login
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <a
+                                href="{% url 'register' %}"
+                                class="hover:text-blue-400 transition"
+                            >
+                                Create Account
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </div>
+
+
+            <!-- Contact -->
+
+            <div>
+
+                <h3
+                    class="text-sm font-semibold text-white uppercase tracking-wider mb-5"
+                >
+                    Contact Us
+                </h3>
+
+
+                <ul class="space-y-4 text-sm">
+
+
+                    <!-- Location -->
+
+                    <li class="flex items-start gap-3">
+
+                        <i
+                            data-lucide="map-pin"
+                            class="w-5 h-5 text-blue-500 flex-shrink-0"
+                        ></i>
+
+                        <span>
+                            Kathmandu, Nepal
+                        </span>
+
+                    </li>
+
+
+                    <!-- Email -->
+
+                    <li class="flex items-center gap-3">
+
+                        <i
+                            data-lucide="mail"
+                            class="w-5 h-5 text-blue-500 flex-shrink-0"
+                        ></i>
+
+                        <span>
+                            support@mystore.com
+                        </span>
+
+                    </li>
+
+
+                    <!-- Phone -->
+
+                    <li class="flex items-center gap-3">
+
+                        <i
+                            data-lucide="phone"
+                            class="w-5 h-5 text-blue-500 flex-shrink-0"
+                        ></i>
+
+                        <span>
+                            +977 98XXXXXXXX
+                        </span>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Bottom Footer -->
+
+    <div class="border-t border-gray-800">
+
+        <div class="max-w-7xl mx-auto px-6 py-5">
+
+            <div
+                class="flex flex-col md:flex-row items-center justify-between gap-3"
+            >
+
+                <p class="text-sm text-gray-500">
+                    © 2026 MyStore. All rights reserved.
+                </p>
+
+
+                <div class="flex items-center gap-5 text-sm text-gray-500">
+
+                    <a
+                        href="/"
+                        class="hover:text-gray-300 transition"
+                    >
+                        Privacy Policy
+                    </a>
+
+
+                    <a
+                        href="/"
+                        class="hover:text-gray-300 transition"
+                    >
+                        Terms & Conditions
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- ==================== LUCIDE ==================== -->
+
+<script>
+    lucide.createIcons();
+</script>
+
+
+</body>
+
+</html>
+

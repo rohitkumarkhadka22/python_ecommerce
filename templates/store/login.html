@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login - MyStore
+{% endblock %}
+
+
+{% block content %}
+
+<div class="min-h-[70vh] flex items-center justify-center px-6 py-12">
+
+    <div class="w-full max-w-md">
+
+        <div class="text-center mb-8">
+
+            <h1 class="text-3xl font-bold">
+                Welcome back
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Login to continue shopping.
+            </p>
+
+        </div>
+
+
+        <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
+
+            {% if error %}
+
+            <div class="bg-red-50 text-red-600 p-3 rounded-lg mb-5 text-sm">
+                {{ error }}
+            </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="mb-5">
+
+                    <label class="block text-sm font-medium mb-2">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+
+                </div>
+
+
+                <div class="mb-6">
+
+                    <label class="block text-sm font-medium mb-2">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <p class="text-center text-sm text-gray-500 mt-6">
+
+                Don't have an account?
+
+                <a
+                    href="{% url 'register' %}"
+                    class="text-blue-600 font-medium hover:underline"
+                >
+                    Create account
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

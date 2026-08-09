@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}
+Checkout - MyStore
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto px-6 py-12">
+
+    <div class="mb-8">
+
+        <p class="text-sm text-blue-600 font-medium">
+            Almost there
+        </p>
+
+        <h1 class="text-3xl font-bold mt-1">
+            Checkout
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            Enter your delivery information.
+        </p>
+
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- Checkout Form -->
+
+        <div class="md:col-span-2">
+
+            <div class="bg-white border border-gray-200 rounded-xl p-6">
+
+                <h2 class="text-xl font-semibold mb-6">
+                    Delivery Information
+                </h2>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-5">
+
+                        <label class="block text-sm font-medium mb-2">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="full_name"
+                            required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+
+                    </div>
+
+
+                    <div class="mb-5">
+
+                        <label class="block text-sm font-medium mb-2">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+
+                    </div>
+
+
+                    <div class="mb-6">
+
+                        <label class="block text-sm font-medium mb-2">
+                            Delivery Address
+                        </label>
+
+                        <textarea
+                            name="address"
+                            rows="4"
+                            required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition"
+                    >
+                        Place Order
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- Order Summary -->
+
+        <div>
+
+            <div class="bg-white border border-gray-200 rounded-xl p-6">
+
+                <h2 class="font-semibold text-lg mb-5">
+                    Order Summary
+                </h2>
+
+                {% for item in cart_items %}
+
+                <div class="flex justify-between text-sm mb-4">
+
+                    <div>
+
+                        <p class="font-medium">
+                            {{ item.product.name }}
+                        </p>
+
+                        <p class="text-gray-500">
+                            Qty: {{ item.quantity }}
+                        </p>
+
+                    </div>
+
+                    <p class="font-medium">
+                        Rs. {{ item.subtotal }}
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+
+                <div class="border-t border-gray-200 pt-4 mt-4">
+
+                    <div class="flex justify-between">
+
+                        <span class="font-semibold">
+                            Total
+                        </span>
+
+                        <span class="text-xl font-bold">
+                            Rs. {{ total }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

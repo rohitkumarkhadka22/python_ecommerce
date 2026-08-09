@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ product.name }} - MyStore
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Back -->
+
+    <a href="/" class="text-sm text-gray-500 hover:text-blue-600">← Back to products</a>
+
+    <!-- Product -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-8">
+      <!-- Product Image -->
+
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-[500px] object-cover" />
+      </div>
+
+      <!-- Product Information -->
+
+      <div class="flex flex-col justify-center">
+        <!-- Category -->
+
+        <p class="text-sm uppercase tracking-wide text-blue-600 font-medium">{{ product.category.name }}</p>
+
+        <!-- Name -->
+
+        <h1 class="text-4xl font-bold mt-3">{{ product.name }}</h1>
+
+        <!-- Price -->
+
+        <p class="text-3xl font-bold mt-6">Rs. {{ product.price }}</p>
+
+        <!-- Description -->
+
+        <div class="mt-6">
+          <h2 class="font-semibold text-lg">Description</h2>
+
+          <p class="text-gray-600 leading-relaxed mt-2">{{ product.description }}</p>
+        </div>
+
+        <!-- Stock -->
+
+        <div class="mt-6">
+          {% if product.stock > 0 %}
+            <p class="text-green-600 font-medium">✓ In stock</p>
+
+            <p class="text-sm text-gray-500 mt-1">{{ product.stock }} items available</p>
+          {% else %}
+            <p class="text-red-600 font-medium">Out of stock</p>
+          {% endif %}
+        </div>
+
+        <!-- Add Cart -->
+
+        {% if product.stock > 0 %}
+          <a href="{% url 'add_to_cart' product.id %}" class="block text-center mt-8 bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition">Add to Cart</a>
+        {% else %}
+          <button disabled class="mt-8 bg-gray-300 text-gray-500 py-3 px-6 rounded-lg cursor-not-allowed">Out of Stock</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

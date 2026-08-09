@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Order Confirmed - MyStore
+{% endblock %}
+
+{% block content %}
+  <div class="min-h-[70vh] flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-lg text-center">
+      <!-- Success Icon -->
+
+      <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+        <span class="text-4xl">✓</span>
+      </div>
+
+      <!-- Message -->
+
+      <h1 class="text-3xl font-bold mt-6">Order Confirmed!</h1>
+
+      <p class="text-gray-500 mt-3">Thank you for shopping with MyStore. Your order has been successfully placed.</p>
+
+      <!-- Order Information -->
+
+      <div class="bg-white border border-gray-200 rounded-xl p-6 mt-8 text-left">
+        <div class="flex justify-between py-3 border-b border-gray-100">
+          <span class="text-gray-500">Order ID</span>
+
+          <span class="font-semibold">#{{ order.id }}</span>
+        </div>
+
+        <div class="flex justify-between py-3 border-b border-gray-100">
+          <span class="text-gray-500">Customer</span>
+
+          <span class="font-medium">{{ order.full_name }}</span>
+        </div>
+
+        <div class="flex justify-between py-3 border-b border-gray-100">
+          <span class="text-gray-500">Phone</span>
+
+          <span class="font-medium">{{ order.phone }}</span>
+        </div>
+
+        <div class="flex justify-between py-3 border-b border-gray-100">
+          <span class="text-gray-500">Status</span>
+
+          <span class="text-yellow-600 font-medium">{{ order.status }}</span>
+        </div>
+
+        <div class="flex justify-between pt-4">
+          <span class="font-semibold">Total</span>
+
+          <span class="text-xl font-bold">Rs. {{ order.total_price }}</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+
+      <div class="flex flex-col sm:flex-row gap-3 mt-8">
+        <a href="/" class="flex-1 bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition text-center">Continue Shopping</a>
+
+        <a href="{% url 'order_history' %}" class="flex-1 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-100 transition text-center">My Orders</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
