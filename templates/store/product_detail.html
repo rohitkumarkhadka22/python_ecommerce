@@ -1,67 +1,227 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}
-  {{ product.name }} - MyStore
+{{ product.name }} - Culture444
 {% endblock %}
 
 {% block content %}
-  <div class="max-w-7xl mx-auto px-6 py-12">
+
+<section class="max-w-7xl mx-auto px-6 py-10">
+
     <!-- Back -->
 
-    <a href="/" class="text-sm text-gray-500 hover:text-blue-600">← Back to products</a>
+    <a
+        href="/"
+        class="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 transition"
+    >
+        ← Back to products
+    </a>
+
 
     <!-- Product -->
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-8">
-      <!-- Product Image -->
 
-      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-[500px] object-cover" />
-      </div>
 
-      <!-- Product Information -->
+        <!-- ========================= -->
+        <!-- PRODUCT IMAGE -->
+        <!-- ========================= -->
 
-      <div class="flex flex-col justify-center">
-        <!-- Category -->
+        <div
+            class="bg-white rounded-2xl border border-gray-200 overflow-hidden"
+        >
 
-        <p class="text-sm uppercase tracking-wide text-blue-600 font-medium">{{ product.category.name }}</p>
+            <div
+                class="relative bg-gray-50 flex items-center justify-center"
+            >
 
-        <!-- Name -->
+                {% if product.image %}
 
-        <h1 class="text-4xl font-bold mt-3">{{ product.name }}</h1>
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                        class="w-full h-[500px] object-contain p-8"
+                    >
 
-        <!-- Price -->
+                {% else %}
 
-        <p class="text-3xl font-bold mt-6">Rs. {{ product.price }}</p>
+                    <div class="h-[500px] flex items-center justify-center text-gray-400">
+                        No image available
+                    </div>
 
-        <!-- Description -->
+                {% endif %}
 
-        <div class="mt-6">
-          <h2 class="font-semibold text-lg">Description</h2>
 
-          <p class="text-gray-600 leading-relaxed mt-2">{{ product.description }}</p>
+                <!-- Discount Badge -->
+
+                {% if product.discount > 0 %}
+
+                    <span
+                        class="absolute top-5 left-5 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-sm"
+                    >
+                        {{ product.discount }}% OFF
+                    </span>
+
+                {% endif %}
+
+            </div>
+
         </div>
 
-        <!-- Stock -->
 
-        <div class="mt-6">
-          {% if product.stock > 0 %}
-            <p class="text-green-600 font-medium">✓ In stock</p>
 
-            <p class="text-sm text-gray-500 mt-1">{{ product.stock }} items available</p>
-          {% else %}
-            <p class="text-red-600 font-medium">Out of stock</p>
-          {% endif %}
+        <!-- PRODUCT INFORMATION -->
+        
+
+        <div class="flex flex-col justify-center">
+
+
+            <!-- Category -->
+
+            <p
+                class="text-sm uppercase tracking-wide text-blue-600 font-semibold"
+            >
+                {{ product.category.name }}
+            </p>
+
+
+            <!-- Name -->
+
+            <h1 class="text-4xl md:text-5xl font-bold mt-3 text-gray-900">
+                {{ product.name }}
+            </h1>
+
+
+           
+            <!-- PRICE -->
+         
+
+            <div class="mt-6">
+
+                {% if product.discount > 0 %}
+
+                    <!-- Original Price -->
+
+                    <p class="text-lg text-gray-400 line-through">
+                        Rs. {{ product.price|floatformat:0|intcomma }}
+                    </p>
+
+
+                    <!-- Discounted Price -->
+
+                    <div class="flex flex-wrap items-center gap-4 mt-1">
+
+                        <p class="text-3xl font-bold text-green-600">
+                            Rs. {{ product.discounted_price|floatformat:0|intcomma }}
+                        </p>
+
+                        <span
+                            class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold"
+                        >
+                            {{ product.discount }}% OFF
+                        </span>
+
+                    </div>
+
+                {% else %}
+
+                    <!-- Normal Price -->
+
+                    <p class="text-3xl font-bold text-gray-900">
+                        Rs. {{ product.price|floatformat:0|intcomma }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+       
+            <!-- DESCRIPTION -->
+           
+
+            <div class="mt-6">
+
+                <h2 class="font-semibold text-lg text-gray-900">
+                    Description
+                </h2>
+
+                <p class="text-gray-600 leading-relaxed mt-2">
+                    {{ product.description }}
+                </p>
+
+            </div>
+
+
+           
+            <!-- STOCK -->
+          
+
+            <div class="mt-6">
+
+                {% if product.stock > 0 %}
+
+                    <div class="flex items-center gap-2">
+
+                        <span class="w-2.5 h-2.5 bg-green-500 rounded-full"></span>
+
+                        <p class="text-green-600 font-medium">
+                            In stock
+                        </p>
+
+                    </div>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ product.stock }} items available
+                    </p>
+
+                {% else %}
+
+                    <div class="flex items-center gap-2">
+
+                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+
+                        <p class="text-red-600 font-medium">
+                            Out of stock
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+          
+            <!-- ADD TO CART -->
+    
+
+            {% if product.stock > 0 %}
+
+                <a
+                    href="{% url 'add_to_cart' product.id %}"
+                    class="block text-center mt-8 bg-gray-900 text-white py-3.5 px-6 rounded-lg font-medium hover:bg-blue-600 transition duration-200"
+                >
+                    Add to Cart
+                </a>
+
+            {% else %}
+
+                <button
+                    disabled
+                    class="mt-8 bg-gray-300 text-gray-500 py-3.5 px-6 rounded-lg cursor-not-allowed"
+                >
+                    Out of Stock
+                </button>
+
+            {% endif %}
+
         </div>
 
-        <!-- Add Cart -->
-
-        {% if product.stock > 0 %}
-          <a href="{% url 'add_to_cart' product.id %}" class="block text-center mt-8 bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition">Add to Cart</a>
-        {% else %}
-          <button disabled class="mt-8 bg-gray-300 text-gray-500 py-3 px-6 rounded-lg cursor-not-allowed">Out of Stock</button>
-        {% endif %}
-      </div>
     </div>
-  </div>
+
+</section>
+
 {% endblock %}
+

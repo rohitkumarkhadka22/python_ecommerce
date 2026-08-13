@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100
+    )
 
     def __str__(self):
         return self.name
@@ -18,7 +20,9 @@ class Product(models.Model):
         related_name="products"
     )
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(
+        max_length=200
+    )
 
     image = models.ImageField(
         upload_to="products/"
@@ -31,13 +35,34 @@ class Product(models.Model):
         decimal_places=2
     )
 
+    discount = models.PositiveIntegerField(
+        default=0
+    )
+
     stock = models.PositiveIntegerField(
         default=0
+    )
+
+    # Show this product in Popular Products
+    is_popular = models.BooleanField(
+        default=False
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    @property
+    def discounted_price(self):
+
+        return self.price - (
+            self.price * self.discount / 100
+        )
+
+    @property
+    def discount_amount(self):
+
+        return self.price - self.discounted_price
 
     def __str__(self):
         return self.name
@@ -75,4 +100,5 @@ class Order(models.Model):
     )
 
     def __str__(self):
+
         return f"Order #{self.id} - {self.user.username}"

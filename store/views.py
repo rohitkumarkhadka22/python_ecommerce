@@ -2,13 +2,24 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Product, Order, Category
 from .forms import RegisterForm
+from .serializers import ProductSerializer
 
 
-# Home
+
+
+
+
 def home(request):
-    products = Product.objects.all()
+
+    
+    products = Product.objects.filter(
+        is_popular=True
+    )
+
     categories = Category.objects.all()
 
     return render(
@@ -21,9 +32,30 @@ def home(request):
     )
 
 
-# Category Products
-def category_products(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
+
+
+def product_detail(request, id):
+
+    product = get_object_or_404(
+        Product,
+        id=id
+    )
+
+    return render(
+        request,
+        'store/product_detail.html',
+        {
+            'product': product
+        }
+    )
+
+
+def category_products(request, id):
+
+    category = get_object_or_404(
+        Category,
+        id=id
+    )
 
     products = Product.objects.filter(
         category=category
@@ -39,30 +71,33 @@ def category_products(request, category_id):
     )
 
 
-# Product Detail
-def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
 
-    return render(
-        request,
-        'store/product_detail.html',
-        {'product': product}
+
+def add_to_cart(request, id):
+
+    product = get_object_or_404(
+        Product,
+        id=id
     )
 
-# Add to Cart
-def add_to_cart(request, id):
-    product = get_object_or_404(Product, id=id)
+    cart = request.session.get(
+        'cart',
+        {}
+    )
 
-    cart = request.session.get('cart', {})
     product_id = str(product.id)
 
-    if product_id in cart:
+    if product.stock > 0:
 
-        if cart[product_id] < product.stock:
-            cart[product_id] += 1
+        if product_id in cart:
 
-    else:
-        cart[product_id] = 1
+            if cart[product_id] < product.stock:
+
+                cart[product_id] += 1
+
+        else:
+
+            cart[product_id] = 1
 
     request.session['cart'] = cart
     request.session.modified = True
@@ -70,9 +105,14 @@ def add_to_cart(request, id):
     return redirect('cart')
 
 
-# Cart
+
+
 def cart(request):
-    cart_data = request.session.get('cart', {})
+
+    cart_data = request.session.get(
+        'cart',
+        {}
+    )
 
     cart_items = []
     total = 0
@@ -84,7 +124,11 @@ def cart(request):
             id=product_id
         )
 
-        subtotal = product.price * quantity
+        # Use discounted price
+        subtotal = (
+            product.discounted_price * quantity
+        )
+
         total += subtotal
 
         cart_items.append({
@@ -103,12 +147,18 @@ def cart(request):
     )
 
 
-# Remove from Cart
+
 def remove_from_cart(request, id):
-    cart = request.session.get('cart', {})
+
+    cart = request.session.get(
+        'cart',
+        {}
+    )
+
     product_id = str(id)
 
     if product_id in cart:
+
         del cart[product_id]
 
     request.session['cart'] = cart
@@ -117,19 +167,26 @@ def remove_from_cart(request, id):
     return redirect('cart')
 
 
-# Increase Quantity
+
+
 def increase_quantity(request, id):
+
     product = get_object_or_404(
         Product,
         id=id
     )
 
-    cart = request.session.get('cart', {})
+    cart = request.session.get(
+        'cart',
+        {}
+    )
+
     product_id = str(id)
 
     if product_id in cart:
 
         if cart[product_id] < product.stock:
+
             cart[product_id] += 1
 
     request.session['cart'] = cart
@@ -138,17 +195,24 @@ def increase_quantity(request, id):
     return redirect('cart')
 
 
-# Decrease Quantity
+
 def decrease_quantity(request, id):
-    cart = request.session.get('cart', {})
+
+    cart = request.session.get(
+        'cart',
+        {}
+    )
+
     product_id = str(id)
 
     if product_id in cart:
 
         if cart[product_id] > 1:
+
             cart[product_id] -= 1
 
         else:
+
             del cart[product_id]
 
     request.session['cart'] = cart
@@ -157,19 +221,24 @@ def decrease_quantity(request, id):
     return redirect('cart')
 
 
-# Register
+
 def register(request):
 
     if request.user.is_authenticated:
+
         return redirect('home')
 
     if request.method == 'POST':
 
-        form = RegisterForm(request.POST)
+        form = RegisterForm(
+            request.POST
+        )
 
         if form.is_valid():
 
-            user = form.save(commit=False)
+            user = form.save(
+                commit=False
+            )
 
             user.set_password(
                 form.cleaned_data['password']
@@ -177,30 +246,43 @@ def register(request):
 
             user.save()
 
-            login(request, user)
+            login(
+                request,
+                user
+            )
 
             return redirect('home')
 
     else:
+
         form = RegisterForm()
 
     return render(
         request,
         'store/register.html',
-        {'form': form}
+        {
+            'form': form
+        }
     )
 
 
-# Login
+
+
 def user_login(request):
 
     if request.user.is_authenticated:
+
         return redirect('home')
 
     if request.method == 'POST':
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get(
+            'username'
+        )
+
+        password = request.POST.get(
+            'password'
+        )
 
         user = authenticate(
             request,
@@ -210,7 +292,10 @@ def user_login(request):
 
         if user is not None:
 
-            login(request, user)
+            login(
+                request,
+                user
+            )
 
             return redirect('home')
 
@@ -220,7 +305,8 @@ def user_login(request):
                 request,
                 'store/login.html',
                 {
-                    'error': 'Invalid username or password.'
+                    'error':
+                    'Invalid username or password.'
                 }
             )
 
@@ -230,7 +316,7 @@ def user_login(request):
     )
 
 
-# Logout
+
 def user_logout(request):
 
     logout(request)
@@ -238,14 +324,19 @@ def user_logout(request):
     return redirect('home')
 
 
-# Checkout
+
+
 @login_required
 def checkout(request):
 
-    cart_data = request.session.get('cart', {})
+    cart_data = request.session.get(
+        'cart',
+        {}
+    )
 
-    # Don't allow checkout with empty cart
+    # Don't allow empty cart
     if not cart_data:
+
         return redirect('cart')
 
     cart_items = []
@@ -258,7 +349,11 @@ def checkout(request):
             id=product_id
         )
 
-        subtotal = product.price * quantity
+        # Use discounted price
+        subtotal = (
+            product.discounted_price * quantity
+        )
+
         total += subtotal
 
         cart_items.append({
@@ -267,23 +362,37 @@ def checkout(request):
             'subtotal': subtotal,
         })
 
-    # When user submits checkout form
+    # Place order
     if request.method == 'POST':
 
-        full_name = request.POST.get('full_name')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
+        full_name = request.POST.get(
+            'full_name'
+        )
+
+        phone = request.POST.get(
+            'phone'
+        )
+
+        address = request.POST.get(
+            'address'
+        )
 
         order = Order.objects.create(
+
             user=request.user,
+
             full_name=full_name,
+
             phone=phone,
+
             address=address,
+
             total_price=total,
         )
 
-        # Clear cart after placing order
+        # Clear cart
         request.session['cart'] = {}
+
         request.session.modified = True
 
         return redirect(
@@ -301,7 +410,6 @@ def checkout(request):
     )
 
 
-# Order Success
 @login_required
 def order_success(request, id):
 
@@ -318,12 +426,18 @@ def order_success(request, id):
             'order': order
         }
     )
+
+
+
+
 @login_required
 def order_history(request):
 
     orders = Order.objects.filter(
         user=request.user
-    ).order_by('-created_at')
+    ).order_by(
+        '-created_at'
+    )
 
     return render(
         request,
@@ -332,3 +446,41 @@ def order_history(request):
             'orders': orders
         }
     )
+
+@api_view(["GET", "POST"])
+def product_api(request):
+
+    # GET - Get all products
+    if request.method == "GET":
+
+        products = Product.objects.all()
+
+        serializer = ProductSerializer(
+            products,
+            many=True
+        )
+
+        return Response(
+            serializer.data
+        )
+
+    # POST - Create a new product
+    if request.method == "POST":
+
+        serializer = ProductSerializer(
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                serializer.data,
+                status=201
+            )
+
+        return Response(
+            serializer.errors,
+            status=400
+        )

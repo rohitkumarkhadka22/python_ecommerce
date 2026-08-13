@@ -15,102 +15,143 @@ from .views import (
     checkout,
     order_success,
     order_history,
+    product_api,
 )
 
 
 urlpatterns = [
 
-    # Home
+    # =========================
+    # HOME
+    # =========================
+
     path(
-        '',
+        "",
         home,
-        name='home'
+        name="home"
     ),
 
-    # Categories
-    path(
-        'category/<int:category_id>/',
-        category_products,
-        name='category_products'
-    ),
 
-    # Product Detail
+    # =========================
+    # PRODUCT
+    # =========================
+
     path(
-        'product/<int:id>/',
+        "product/<int:id>/",
         product_detail,
-        name='product_detail'
+        name="product_detail"
     ),
 
-    # Cart
-    path(
-        'cart/add/<int:id>/',
-        add_to_cart,
-        name='add_to_cart'
-    ),
+
+    # =========================
+    # CATEGORY
+    # =========================
 
     path(
-        'cart/',
+        "category/<int:id>/",
+        category_products,
+        name="category_products"
+    ),
+
+
+    # =========================
+    # CART
+    # =========================
+
+    path(
+        "cart/",
         cart,
-        name='cart'
+        name="cart"
     ),
 
     path(
-        'cart/remove/<int:id>/',
+        "cart/add/<int:id>/",
+        add_to_cart,
+        name="add_to_cart"
+    ),
+
+    path(
+        "cart/remove/<int:id>/",
         remove_from_cart,
-        name='remove_from_cart'
+        name="remove_from_cart"
     ),
 
     path(
-        'cart/increase/<int:id>/',
+        "cart/increase/<int:id>/",
         increase_quantity,
-        name='increase_quantity'
+        name="increase_quantity"
     ),
 
     path(
-        'cart/decrease/<int:id>/',
+        "cart/decrease/<int:id>/",
         decrease_quantity,
-        name='decrease_quantity'
+        name="decrease_quantity"
     ),
 
-    # Authentication
+
+    # =========================
+    # AUTHENTICATION
+    # =========================
+
     path(
-        'register/',
+        "register/",
         register,
-        name='register'
+        name="register"
     ),
 
     path(
-        'login/',
+        "login/",
         user_login,
-        name='login'
+        name="login"
     ),
 
     path(
-        'logout/',
+        "logout/",
         user_logout,
-        name='logout'
+        name="logout"
     ),
 
-    # Checkout
+
+    # =========================
+    # CHECKOUT
+    # =========================
+
     path(
-        'checkout/',
+        "checkout/",
         checkout,
-        name='checkout'
+        name="checkout"
     ),
 
-    # Order Success
+
+    # =========================
+    # ORDER SUCCESS
+    # =========================
+
     path(
-        'order-success/<int:id>/',
+        "order-success/<int:id>/",
         order_success,
-        name='order_success'
+        name="order_success"
     ),
 
-    # Order History
+
+    # =========================
+    # ORDER HISTORY
+    # =========================
+
     path(
-        'orders/',
+        "orders/",
         order_history,
-        name='order_history'
+        name="order_history"
     ),
 
-]
 
+    # =========================
+    # REST API
+    # =========================
+
+    path(
+        "api/products/",
+        product_api,
+        name="product_api"
+    ),
+]
